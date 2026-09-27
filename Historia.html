@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casa Patiño - Inicio</title>
+    <style>
+        :root {
+            --bg: #080a10;
+            --panel: #121722;
+            --panel2: #1b2230;
+            --gold: #d7b35a;
+            --gold2: #f4d889;
+            --text: #f6f0df;
+            --muted: #c6bda8;
+            --line: rgba(215, 179, 90, .28);
+            --soft: rgba(255, 255, 255, .075)
+        }
+        * { box-sizing: border-box }
+        html { scroll-behavior: smooth }
+        body {
+            margin: 0;
+            font-family: Segoe UI, Arial, sans-serif;
+            background: radial-gradient(circle at top left, #26324b 0, #0d111d 34%, #07080d 100%);
+            color: var(--text);
+            line-height: 1.7
+        }
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(5, 6, 10, .84);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--line)
+        }
+        .nav-inner {
+            max-width: 1160px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 12px 18px
+        }
+        .brand {
+            font-weight: 900;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--gold2);
+            font-size: .92rem
+        }
+        .links { display: flex; gap: 8px; flex-wrap: wrap }
+        .links a, .btn {
+            color: var(--text);
+            text-decoration: none;
+            border: 1px solid var(--line);
+            background: rgba(215, 179, 90, .10);
+            padding: 9px 14px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: .92rem;
+            transition: .2s
+        }
+        .links a:hover, .links a.active, .btn:hover {
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            color: #111;
+            transform: translateY(-1px)
+        }
+        .hero {
+            max-width: 1160px;
+            margin: auto;
+            text-align: center;
+            padding: 70px 18px 38px
+        }
+        .eyebrow {
+            color: var(--gold2);
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            font-size: .8rem;
+            font-weight: 800
+        }
+        .hero h1 {
+            font-family: Georgia, serif;
+            font-size: clamp(2rem, 6vw, 4.8rem);
+            line-height: 1.05;
+            margin: 12px 0;
+            color: #fff;
+            text-shadow: 0 10px 32px rgba(0,0,0,.45)
+        }
+        .hero p {
+            max-width: 880px;
+            margin: 0 auto;
+            color: var(--muted);
+            font-size: 1.08rem
+        }
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 24px
+        }
+        .wrap {
+            max-width: 1160px;
+            margin: auto;
+            padding: 22px 18px 64px
+        }
+        .section {
+            background: linear-gradient(180deg, rgba(255, 255, 255, .075), rgba(255, 255, 255, .035));
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            padding: 28px;
+            margin: 22px 0;
+            box-shadow: 0 22px 55px rgba(0,0,0,.28)
+        }
+        .section h2 {
+            font-family: Georgia, serif;
+            color: var(--gold2);
+            font-size: clamp(1.45rem, 3vw, 2.15rem);
+            margin: 0 0 12px
+        }
+        .section h3 { color: #fff; margin: 18px 0 8px }
+        .lead { font-size: 1.08rem; color: #e9dfc8 }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+            margin-top: 22px
+        }
+        .card {
+            background: rgba(0, 0, 0, .24);
+            border: 1px solid rgba(255, 255, 255, .09);
+            border-radius: 19px;
+            overflow: hidden;
+            box-shadow: 0 16px 35px rgba(0,0,0,.25)
+        }
+        .card img { width: 100%; height: 260px; object-fit: cover; display: block }
+        .card .body { padding: 16px }
+        .card h3 { margin: 0 0 6px; color: #fff; font-size: 1.05rem }
+        .card p { margin: 0; color: var(--muted); font-size: .94rem }
+        .statgrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-top: 20px
+        }
+        .stat {
+            padding: 16px;
+            border-radius: 17px;
+            background: rgba(215, 179, 90, .11);
+            border: 1px solid var(--line)
+        }
+        .stat b { display: block; color: var(--gold2); font-size: 1.15rem }
+        .timeline { display: grid; gap: 14px; margin-top: 20px }
+        .timeitem {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 16px;
+            align-items: start;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(0, 0, 0, .18);
+            border-radius: 18px
+        }
+        .year {
+            color: #111;
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            font-weight: 900;
+            text-align: center;
+            border-radius: 999px;
+            padding: 6px 10px
+        }
+        .list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 12px;
+            margin-top: 18px
+        }
+        .list div {
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .04);
+            border-radius: 16px;
+            padding: 14px
+        }
+        .footer {
+            text-align: center;
+            color: rgba(246, 240, 223, .62);
+            font-size: .88rem;
+            padding: 28px;
+            border-top: 1px solid rgba(255, 255, 255, .08)
+        }
+        @media(max-width:690px) {
+            .nav-inner { justify-content: center }
+            .hero { padding-top: 42px }
+            .section { padding: 20px }
+            .timeitem { grid-template-columns: 1fr }
+            .card img { height: 220px }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="topnav">
+        <div class="nav-inner">
+            <div class="brand">Casa Patiño · Uncía</div>
+            <div class="links">
+                <a class="active" href="index.html">🏠 Inicio</a>
+                <a href="galeria.html">🖼 Galería</a>
+                
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="eyebrow">Patrimonio histórico de Bolivia</div>
+        <h1>Casa de Simón I. Patiño</h1>
+        <p>Recorrido digital por la vida de Simón I. Patiño, su llegada a Uncía, el auge del estaño y la importancia histórica de la Casa Patiño en el Norte de Potosí.</p>
+        <div class="actions">
+            <a class="btn" href="#historia">Leer historia</a>
+            <a class="btn" href="bibliografia.html">Bibliografía</a>
+            <a class="btn" href="galeria.html">Ver galería</a>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <section class="section" id="historia">
+            <h2>Historia de Simón I. Patiño y la Casa Patiño</h2>
+            <p class="lead">Simón Iturri Patiño fue una de las figuras más influyentes de la historia económica boliviana. Su vida estuvo marcada por el trabajo, la minería y el crecimiento del estaño, mineral que convirtió a Uncía y Llallagua en centros fundamentales para el desarrollo del país.</p>
+            <p>Simón I. Patiño nació en Santiváñez, Cochabamba, en 1860. En su juventud trabajó en diferentes actividades comerciales y administrativas. Buscando mejores oportunidades, se trasladó hacia el departamento de Potosí, donde la minería tenía una enorme importancia. Su llegada al Norte de Potosí coincidió con el crecimiento de la explotación minera y con el interés por el estaño, que empezaba a reemplazar a la plata como uno de los minerales más valiosos.</p>
+            <p>En la región de Uncía y Llallagua, Patiño comenzó relacionándose con pequeños negocios mineros. Con esfuerzo y visión empresarial adquirió la mina <strong>La Salvadora</strong>, en el cerro de Llallagua. Allí se descubrió una de las vetas de estaño más importantes del mundo. Este hallazgo cambió por completo su vida y transformó a la región en un centro minero de gran relevancia nacional e internacional.</p>
+            <p>Gracias a la explotación del estaño, Patiño impulsó la construcción de viviendas, oficinas, caminos, instalaciones industriales, espacios administrativos y residencias. La actividad minera generó empleo para miles de trabajadores y fortaleció el crecimiento urbano de Uncía. La ciudad se convirtió en un punto estratégico para la producción, administración y transporte del mineral.</p>
+            <p>La <strong>Casa Patiño de Uncía</strong> fue una de las construcciones más representativas de esa etapa. Su arquitectura refleja influencia europea, con ambientes amplios, balcones, detalles ornamentales y espacios destinados a reuniones sociales y administrativas. Esta residencia simboliza el poder económico alcanzado por la minería del estaño y el papel que tuvo Uncía en la historia boliviana.</p>

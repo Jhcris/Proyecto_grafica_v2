@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casa Simón I. Patiño — Uncía, Bolivia</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family:'Segoe UI', sans-serif;
+  background:#0a0b14;
+  color:#f0ead6;
+  overflow-x:hidden;
+}
+
+header {
+  text-align:center;
+  padding:1.8rem 1rem 1rem;
+  background:linear-gradient(to bottom,#0a0b14,transparent);
+  position:relative; z-index:10;
+}
+header h1 {
+  font-size:clamp(1.3rem,4vw,2.2rem);
+  font-weight:300;
+  letter-spacing:0.14em;
+  color:#f5d97e;
+  text-transform:uppercase;
+}
+header p { font-size:0.8rem; color:#9a9282; margin-top:0.35rem; letter-spacing:0.06em; }
+
+#scene-wrap {
+  width:100%; max-width:1000px;
+  margin:0 auto;
+  position:relative;
+}
+canvas { width:100%!important; display:block; height:560px; }
+
+/* ── CONTROL PANEL ── */
+#controls {
+  position:absolute; bottom:14px; left:14px;
+  display:flex; flex-wrap:wrap; gap:7px;
+}
+.ctrl-btn {
+  font-size:11px; padding:5px 13px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.22);
+  background:rgba(255,255,255,0.07);
+  color:#f0ead6; cursor:pointer;
+  backdrop-filter:blur(4px);
+  transition:background 0.18s, transform 0.1s;
+  user-select:none;
+}
+.ctrl-btn:hover { background:rgba(255,255,255,0.15); }
+.ctrl-btn:active { transform:scale(0.96); }
+.ctrl-btn.off { opacity:0.35; }
+.ctrl-btn.active { background:rgba(245,217,126,0.22); border-color:#f5d97e; color:#f5d97e; }
+
+/* material mode buttons */
+#mat-switcher {
+  position:absolute; bottom:14px; right:14px;
+  display:flex; flex-direction:column; gap:5px; align-items:flex-end;
+}
+.mat-btn {
+  font-size:10px; padding:4px 11px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.18);
+  background:rgba(0,0,0,0.45);
+  color:#c0baa8; cursor:pointer;
+  transition:all 0.18s;
+}
+.mat-btn:hover,.mat-btn.on { background:rgba(245,217,126,0.2); color:#f5d97e; border-color:#f5d97e; }
+
+#badge {
+  position:absolute; top:14px; right:14px;
+  font-size:10px; color:rgba(240,234,214,0.5);
+  text-align:right; line-height:1.8;
+  pointer-events:none;
+}
+
+/* ── LIGHT SLIDERS ── */
+#light-panel {
+  position:absolute; top:14px; left:14px;
+  background:rgba(8,9,18,0.82);
+  border:1px solid rgba(245,217,126,0.15);
+  border-radius:10px;
+  padding:12px 15px;
+  width:200px;
+  backdrop-filter:blur(8px);
+  display:flex; flex-direction:column; gap:9px;
+}
+#light-panel h4 {
+  font-size:9px; letter-spacing:0.18em; text-transform:uppercase;
+  color:#f5d97e; border-bottom:1px solid rgba(245,217,126,0.15);
+  padding-bottom:5px; margin-bottom:2px;
+}
+.sl-row { display:flex; align-items:center; gap:7px; }
+.sl-row label { font-size:9px; color:#9a9282; width:68px; text-transform:uppercase; letter-spacing:0.04em; }
+.sl-row input[type=range] {
+  flex:1; height:3px; -webkit-appearance:none; appearance:none;
+  background:rgba(245,217,126,0.2); border-radius:2px; outline:none; cursor:pointer;
+}
+.sl-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance:none; width:11px; height:11px; border-radius:50%;
+  background:#f5d97e; box-shadow:0 0 4px rgba(245,217,126,0.6); cursor:pointer;
+}
+.sl-row span { font-size:9px; color:#f5d97e; width:24px; text-align:right; }
+
+/* ── INFO BAR ── */
+#info-bar {
+  max-width:1000px; margin:0 auto;
+  padding:1rem 1.2rem;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:1px;
+  background:rgba(255,255,255,0.05);
+  border-top:1px solid rgba(245,217,126,0.18);
+  border-bottom:1px solid rgba(245,217,126,0.18);
+}
+.info-cell { padding:0.6rem 0.9rem; background:#0a0b14; }
+.info-cell .label { font-size:9px; letter-spacing:0.1em; color:#9a9282; text-transform:uppercase; margin-bottom:3px; }
+.info-cell .value { font-size:12px; color:#f5d97e; }
+
+/* ── LIGHT LEGEND ── */
+#lights-legend {
+  max-width:1000px; margin:1.2rem auto 0;
+  padding:0 1.2rem 2rem;
+  display:flex; flex-wrap:wrap; gap:1rem;
+}
+.light-card {
+  flex:1 1 190px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:9px;
+  padding:0.9rem 1.1rem;
+}
+.light-card .lc-title { font-size:12px; font-weight:500; margin-bottom:5px; }
+.light-card .lc-desc  { font-size:11px; color:#9a9282; line-height:1.6; }
+.dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:6px; vertical-align:middle; }
+
+/* ── MAT LEGEND ── */
+#mat-legend {
+  max-width:1000px; margin:0 auto;
+  padding:0 1.2rem 1.5rem;
+  display:flex; flex-wrap:wrap; gap:0.7rem;
+}
+.mat-card {
+  flex:1 1 150px; font-size:11px;
+  background:rgba(255,255,255,0.025);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:8px; padding:0.7rem 1rem;
+  color:#9a9282; line-height:1.6;
+}
+.mat-card strong { color:#c8c0a8; display:block; margin-bottom:3px; font-size:11.5px; }
+
+footer {
+  text-align:center; padding:1.4rem;
+  font-size:10px; color:rgba(168,160,144,0.4);
+  border-top:1px solid rgba(255,255,255,0.04);
+}
+
+.topnav{position:sticky;top:0;z-index:999;background:rgba(5,6,10,.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(245,217,126,.25)}.nav-inner{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 18px}.brand{font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#f5d97e;font-size:.9rem}.links{display:flex;gap:8px;flex-wrap:wrap}.links a{color:#f0ead6;text-decoration:none;border:1px solid rgba(245,217,126,.25);background:rgba(245,217,126,.10);padding:8px 13px;border-radius:999px;font-weight:700;font-size:.9rem}.links a:hover,.links a.active{background:#f5d97e;color:#111}.intro3d{max-width:1000px;margin:1rem auto 0;padding:0 1.2rem;color:#c8c0a8;text-align:center}.intro3d strong{color:#f5d97e}
+</style>
+</head>
+<body>
+<nav class="topnav"><div class="nav-inner"><div class="brand">Casa Patiño · Modelo 3D</div><div class="links"><a href="index.html">🏠 Inicio</a><a href="pgaleri.html">🖼 Galería</a><a class="active" href="patino.html">🏛 Modelo 3D</a></div></div></nav>
+
+
+<header>
+  <h1>Casa Simón I. Patiño</h1>
+  <p>Uncía, Norte Potosí — Bolivia &nbsp;·&nbsp; Simulación 3D · Materiales Phong &amp; Lambertiano</p>
+</header><div class="intro3d"><strong>Modelo interactivo:</strong> usa el mouse o el dedo para girar la vista, acerca con la rueda y prueba los controles de luces y materiales.</div>
+
+<div id="scene-wrap">
+  <canvas id="c"></canvas>
+
+  <!-- Sliders de iluminación -->
+  <div id="light-panel">
+    <h4>⚡ Luces</h4>
+    <div class="sl-row">
+      <label>Ambiental</label>
+      <input type="range" id="slAmb" min="0" max="2" step="0.05" value="0.55"/>
+      <span id="vAmb">0.55</span>
+    </div>
+    <div class="sl-row">
+      <label>Direcc.</label>
+      <input type="range" id="slDir" min="0" max="3" step="0.05" value="1.2"/>
+      <span id="vDir">1.2</span>
+    </div>
+    <div class="sl-row">
+      <label>Puntual</label>
+      <input type="range" id="slPnt" min="0" max="5" step="0.1" value="2.5"/>
+      <span id="vPnt">2.5</span>
+    </div>
+  </div>
+
+  <!-- Botones de control -->
+  <div id="controls">
+    <button class="ctrl-btn active" id="btnAmb"  onclick="toggleLight('ambient')">💡 Ambiental</button>
+    <button class="ctrl-btn active" id="btnDir"  onclick="toggleLight('dir')">☀️ Direccional</button>
+    <button class="ctrl-btn active" id="btnPnt"  onclick="toggleLight('point')">🔴 Puntual</button>
+    <button class="ctrl-btn active" id="btnRot"  onclick="toggleRotate()">🔄 Auto-rotar</button>
+    <button class="ctrl-btn"        id="btnHelp" onclick="toggleHelpers()">👁 Helpers</button>
+  </div>
+
+  <!-- Selector de material -->
+  <div id="mat-switcher">
+    <button class="mat-btn on"  id="mPhong"  onclick="setMat('phong')">Phong</button>
+    <button class="mat-btn"     id="mLamb"   onclick="setMat('lambert')">Lambertiano</button>
+    <button class="mat-btn"     id="mBoth"   onclick="setMat('both')">Mixto</button>
+  </div>
+
+  <div id="badge">
+    Casa Patiño · Uncía<br>Three.js r128
+  </div>
+</div>
+
+<!-- Info bar -->
+<div id="info-bar">
+  <div class="info-cell"><div class="label">Ubicación</div><div class="value">Uncía, N. Potosí</div></div>
+  <div class="info-cell"><div class="label">Construcción</div><div class="value">1899 – 1903</div></div>
+  <div class="info-cell"><div class="label">Estilo</div><div class="value">Neoclásico / Barroco</div></div>
+  <div class="info-cell"><div class="label">Propietario</div><div class="value">Simón I. Patiño</div></div>
+  <div class="info-cell"><div class="label">Plantas</div><div class="value">2 pisos altos</div></div>
+  <div class="info-cell"><div class="label">Motor 3D</div><div class="value">Three.js r128</div></div>
+</div>
+
+<!-- Leyenda de luces -->
+<div id="lights-legend">
+  <div class="light-card">
+    <div class="lc-title"><span class="dot" style="background:#ffe4aa"></span>Luz Ambiental</div>
+    <div class="lc-desc">Ilumina toda la escena por igual sin dirección. Simula la luz difusa del cielo de Uncía. Interactúa con <em>MeshLambertMaterial</em> y <em>MeshPhongMaterial</em>.</div>
+  </div>
+  <div class="light-card">
+    <div class="lc-title"><span class="dot" style="background:#fff5cc"></span>Luz Direccional</div>
+    <div class="lc-desc">Rayos paralelos con sombras PCF 2048×2048. Simula el sol / luna. El material Phong genera brillos especulares muy visibles bajo esta luz.</div>
+  </div>
+  <div class="light-card">
+    <div class="lc-title"><span class="dot" style="background:#ff6633"></span>Luz Puntual</div>
+    <div class="lc-desc">Emite en todas las direcciones desde un punto, orbita la torre. Con Phong produce reflejos brillantes en molduras. Lambert da difusión suave sin brillo.</div>
+  </div>
+  <div class="light-card">
+    <div class="lc-title"><span class="dot" style="background:#6688ff"></span>Luz de Relleno</div>
+    <div class="lc-desc">Luz direccional secundaria fría desde abajo-atrás. Evita zonas completamente negras y da profundidad volumétrica al edificio.</div>
+  </div>
+</div>
+
+<!-- Leyenda materiales -->
+<div id="mat-legend">
+  <div class="mat-card"><strong>Phong (especular)</strong>Modelo de Phong: calcula difusa + especular + ambiental. Brillos visibles en molduras, cornisas y ventanas.</div>
+  <div class="mat-card"><strong>Lambertiano (difuso)</strong>Solo componente difusa. Sin brillo especular. Ideal para materiales opacos como la piedra sillar y el suelo.</div>
+  <div class="mat-card"><strong>Modo Mixto</strong>Muros y suelo = Lambert. Molduras, vidrios, metal = Phong. Simula la realidad donde conviven materiales distintos.</div>
+</div>
+
+<footer>
+  Modelo 3D interpretativo de la Casa Simón I. Patiño, Uncía, Bolivia · Patrimonio histórico neoclásico · ~1900–1903
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   Casa Simón I. Patiño — Uncía, Bolivia
+   Arquitectura exterior neoclásica de 2 pisos
+   Materiales: MeshPhongMaterial + MeshLambertMaterial
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── RENDERER ── */
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.setClearColor(0x0a0c1a);
+
+function resize() {
+  const w = canvas.parentElement.clientWidth;
+  const h = 560;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+
+/* ── SCENE & CAMERA ── */
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0c1a);
+scene.fog = new THREE.Fog(0x0a0c1a, 50, 110);
+
+const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 200);
+camera.position.set(18, 10, 22);
+camera.lookAt(0, 5, 0);
+resize();
+window.addEventListener('resize', resize);
+
+/* ════════════════════════════════════════════════════════════
+   FÁBRICA DE MATERIALES — Phong y Lambert
+   ════════════════════════════════════════════════════════ */
+
+// Paleta de colores de la Casa Patiño (piedra clara, molduras blancas,
+// techo rojo, balcones metálicos, ventanas con arcos)
+const COLORS = {
+  wall:    0xd8cdb2,  // sillar / piedra clara
+  dark:    0xb8ae90,  // sillar oscuro / piso superior
+  molding: 0xf0e8cc,  // molduras, cornisas, pilastras (más claro)
+  roof:    0x8a2020,  // techo / cubierta roja (teja)
+  window:  0x9ab8c8,  // vidrio ventanas
+  frame:   0xffffff,  // marcos de ventanas y puertas
+  door:    0x6b2a10,  // puerta principal madera oscura
+  balcony: 0x888888,  // barandal metálico
+  ground:  0x5c6050,  // jardín / suelo
+  path:    0x8a8070,  // sendero/acera
+  stone:   0x7a6e58,  // base/zócalo de piedra
+  tree:    0x2a5a18,  // follaje árbol
+  trunk:   0x5c3a18,  // tronco
+  fence:   0x9a9080,  // muro perimetral bajo
+  ironBlack:0x2a2820, // herrería / rejas
+  tile:    0xa83020,  // tejas / cubierta
+  cream:   0xf5e8c0,  // detalle decorativo crema
+};
+
+/* Phong: difusa + especular + ambiental → brillos visibles */
+function phong(color, shininess=40, specular=0x444444) {
+  return new THREE.MeshPhongMaterial({ color, shininess, specular });
+}
+/* Lambert: solo difusa → sin brillo, matte */
+function lamb(color) {
+  return new THREE.MeshLambertMaterial({ color });
+}
+
+/* Banco de materiales en los dos modelos */
+const MATS = {
+  /* Phong versions */
+  P: {
+    wall:    phong(COLORS.wall,    20, 0x222218),
+    dark:    phong(COLORS.dark,    15, 0x1a1a14),
+    molding: phong(COLORS.molding, 60, 0x888870),
+    roof:    phong(COLORS.roof,    35, 0x331010),
+    window:  phong(COLORS.window, 120, 0x8ab4cc),
+    frame:   phong(COLORS.frame,   80, 0xaaaaaa),
+    door:    phong(COLORS.door,    25, 0x331408),
+    balcony: phong(COLORS.balcony,100, 0x666666),
+    ground:  phong(COLORS.ground,   8, 0x111108),
+    path:    phong(COLORS.path,    10, 0x222218),
+    stone:   phong(COLORS.stone,   12, 0x181610),
+    tree:    phong(COLORS.tree,    15, 0x112208),
+    trunk:   phong(COLORS.trunk,   10, 0x1a0e04),
+    fence:   phong(COLORS.fence,   18, 0x221e18),
+    iron:    phong(COLORS.ironBlack,80,0x444444),
+    tile:    phong(COLORS.tile,    30, 0x330c08),
+    cream:   phong(COLORS.cream,   70, 0x888860),
+  },
+  /* Lambert versions */
+  L: {
+    wall:    lamb(COLORS.wall),
+    dark:    lamb(COLORS.dark),
+    molding: lamb(COLORS.molding),
+    roof:    lamb(COLORS.roof),
+    window:  lamb(COLORS.window),
+    frame:   lamb(COLORS.frame),
+    door:    lamb(COLORS.door),
+    balcony: lamb(COLORS.balcony),
+    ground:  lamb(COLORS.ground),
+    path:    lamb(COLORS.path),
+    stone:   lamb(COLORS.stone),
+    tree:    lamb(COLORS.tree),
+    trunk:   lamb(COLORS.trunk),
+    fence:   lamb(COLORS.fence),
+    iron:    lamb(COLORS.ironBlack),
+    tile:    lamb(COLORS.tile),
+    cream:   lamb(COLORS.cream),
+  }
+};
+
+/* Modo activo: 'phong' | 'lambert' | 'both' */
+let matMode = 'phong';
+
+/* Referencia a todos los meshes con su "key" para swap */
+const matMeshes = []; // [{mesh, key, isSpecular}]
+
+function getMat(key, isSpecular=false) {
+  if (matMode === 'phong')   return MATS.P[key];
+  if (matMode === 'lambert') return MATS.L[key];
+  // 'both': especulares→Phong, difusos→Lambert
+  return isSpecular ? MATS.P[key] : MATS.L[key];
+}
+
+function applyMats() {
+  matMeshes.forEach(({mesh, key, isSpecular}) => {
+    mesh.material = getMat(key, isSpecular);
+  });
+}
+
+window.setMat = function(mode) {
+  matMode = mode;
+  applyMats();
+  ['mPhong','mLamb','mBoth'].forEach(id => document.getElementById(id).classList.remove('on'));
+  document.getElementById(mode==='phong'?'mPhong':mode==='lambert'?'mLamb':'mBoth').classList.add('on');
+};
+
+/* ════════════════════════════════════════════════════════════
+   HELPERS DE CONSTRUCCIÓN
+   ════════════════════════════════════════════════════════ */
+function addMesh(geo, key, isSpecular=false, x=0, y=0, z=0, rx=0, ry=0, rz=0) {
+  const mat  = getMat(key, isSpecular);
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(x, y, z);
+  mesh.rotation.set(rx, ry, rz);
+  mesh.castShadow    = true;
+  mesh.receiveShadow = true;
+  scene.add(mesh);
+  matMeshes.push({ mesh, key, isSpecular });
+  return mesh;
+}
+
+function BOX(w, h, d, key, specular, x=0, y=0, z=0, rx=0, ry=0, rz=0) {
+  return addMesh(new THREE.BoxGeometry(w, h, d), key, specular, x, y, z, rx, ry, rz);
+}
+function CYL(rt, rb, h, seg, key, specular, x=0, y=0, z=0) {
+  return addMesh(new THREE.CylinderGeometry(rt, rb, h, seg), key, specular, x, y, z);
+}
+function CONE(r, h, seg, key, specular, x=0, y=0, z=0, ry=0) {
+  const m = addMesh(new THREE.ConeGeometry(r, h, seg), key, specular, x, y, z);
+  m.rotation.y = ry; return m;
+}
+
+/* Arco de ventana con tímpano */
+function addWindow(x, y, z, w=1.6, h=2.2, side=false) {
+  const rz = side ? Math.PI/2 : 0;
+  BOX(w, h, 0.18, 'frame', true, x, y, z);                            // marco
+  BOX(w+0.22, 0.22, 0.18, 'molding', true, x, y+h/2, z);             // arquitrabe
+  // arco (toro half)
+  const arch = new THREE.Mesh(
+    new THREE.TorusGeometry((w-0.1)/2, 0.11, 8, 20, Math.PI),
+    getMat('molding', true)
+  );
+  arch.position.set(x, y+h/2, z);
+  arch.rotation.z = Math.PI;
+  arch.castShadow = true;
+  scene.add(arch);
+  matMeshes.push({mesh:arch, key:'molding', isSpecular:true});
+  // vidrio
+  addMesh(new THREE.PlaneGeometry(w-0.2, h-0.15), 'window', true, x, y, z+0.06);
+}
+
+/* Puerta doble con arco */
+function addDoor(x, y, z) {
+  BOX(3.4, 5.5, 0.22, 'frame', true, x, y, z);                        // marco grueso
+  BOX(1.45, 5.1, 0.15, 'door', false, x-0.76, y, z+0.05);             // hoja izq
+  BOX(1.45, 5.1, 0.15, 'door', false, x+0.76, y, z+0.05);             // hoja der
+  // tableros decorativos en cada hoja
+  BOX(1.1, 2.2, 0.07, 'molding', true, x-0.76, y+0.6, z+0.12);
+  BOX(1.1, 2.2, 0.07, 'molding', true, x+0.76, y+0.6, z+0.12);
+  BOX(1.1, 1.5, 0.07, 'molding', true, x-0.76, y-1.4, z+0.12);
+  BOX(1.1, 1.5, 0.07, 'molding', true, x+0.76, y-1.4, z+0.12);
+  // arco sobre la puerta
+  const arch = new THREE.Mesh(
+    new THREE.TorusGeometry(1.5, 0.14, 8, 20, Math.PI),
+    getMat('molding', true)
+  );
+  arch.position.set(x, y+2.75, z);
+  arch.rotation.z = Math.PI;
+  arch.castShadow = true;
+  scene.add(arch);
+  matMeshes.push({mesh:arch, key:'molding', isSpecular:true});
+}
+
+/* Columna con fuste, capitel y basa */
+function addColumn(x, y, z) {
+  CYL(0.22, 0.24, 8.0, 12, 'molding', true, x, y+4, z);    // fuste
+  CYL(0.34, 0.34, 0.4, 12, 'cream',  true, x, y+8.2, z);   // capitel
+  CYL(0.28, 0.28, 0.3, 12, 'molding', true, x, y+0.15, z); // basa
+}
+
+/* ════════════════════════════════════════════════════════════
+   CONSTRUCCIÓN DEL MODELO EXTERIOR
+   Casa Patiño Uncía: 2 pisos, estilo neoclásico-barroco
+   Fachada principal simétrica + laterales + jardín
+   ════════════════════════════════════════════════════════ */
+
+// ─── SUELO y JARDÍN ─────────────────────────────────────
+BOX(80, 0.3, 50, 'ground', false, 0, -0.15, 5);             // jardín
+BOX(32, 0.22, 14, 'path',  false, 0,  0.11, 12);            // sendero/acera frente
+BOX(28, 0.22,  8, 'path',  false, 0,  0.11,  2);            // patio delantero
+
+// Muro perimetral bajo (reja exterior)
+for (let i = -7; i <= 7; i++) {
+  BOX(0.18, 1.5, 0.18, 'fence', false, i*2, 0.75, 19);      // pilares reja
+  if (i < 7) BOX(1.82, 0.08, 0.08, 'iron', true, i*2+1, 1.4, 19); // barrote superior
+}
+// postes de esquina más altos
+BOX(0.3, 2.2, 0.3, 'fence', false, -14, 1.1, 19);
+BOX(0.3, 2.2, 0.3, 'fence', false,  14, 1.1, 19);
+
+// ─── PISO 1: CUERPO PRINCIPAL ───────────────────────────
+// muro frontal piso 1 (con huecos implícitos)
+BOX(28, 6.2, 1.0, 'wall', false,  0, 3.1,  5.5);            // muro frontal p1
+BOX(28, 6.2, 1.0, 'wall', false,  0, 3.1, -5.5);            // muro trasero p1
+BOX(1.0, 6.2, 11, 'wall', false, -14, 3.1, 0);              // muro lateral izq p1
+BOX(1.0, 6.2, 11, 'wall', false,  14, 3.1, 0);              // muro lateral der p1
+
+// zócalo base (toda la fachada)
+BOX(30, 0.9, 1.4, 'stone', false,  0, 0.45, 5.3);
+BOX(30, 0.9, 1.4, 'stone', false,  0, 0.45,-5.3);
+
+// ─── PISO 2: SEGUNDO NIVEL más retranqueado ──────────────
+BOX(28, 5.5, 1.0, 'dark', false,  0, 9.35, 5.5);            // muro frontal p2
+BOX(28, 5.5, 1.0, 'dark', false,  0, 9.35,-5.5);            // muro trasero p2
+BOX(1.0, 5.5, 11, 'dark', false, -14, 9.35, 0);             // muro lateral izq p2
+BOX(1.0, 5.5, 11, 'dark', false,  14, 9.35, 0);             // muro lateral der p2
+
+// ─── CUBIERTA / TECHO ────────────────────────────────────
+// losa principal
+BOX(30, 0.5, 13, 'tile', false, 0, 12.35, 0);
+// alero saliente (cornisa del techo)
+BOX(31.5, 0.4, 14.5, 'molding', true, 0, 12.1, 0);
+// faldones de teja a 2 aguas
+const fa1 = new THREE.Mesh(new THREE.BoxGeometry(30.5, 0.35, 7.5), getMat('tile', false));
+fa1.position.set(0, 12.55, -3.3); fa1.rotation.x =  0.2; fa1.castShadow=true; scene.add(fa1);
+matMeshes.push({mesh:fa1, key:'tile', isSpecular:false});
+const fa2 = new THREE.Mesh(new THREE.BoxGeometry(30.5, 0.35, 7.5), getMat('tile', false));
+fa2.position.set(0, 12.55,  3.3); fa2.rotation.x = -0.2; fa2.castShadow=true; scene.add(fa2);
+matMeshes.push({mesh:fa2, key:'tile', isSpecular:false});
+// caballete central
+BOX(30.5, 0.3, 0.5, 'tile', false, 0, 13.1, 0);
+
+// ─── CORNISA ENTRE PISOS ────────────────────────────────
+BOX(30, 0.6, 1.3, 'molding', true,  0, 6.5, 5.55);          // cornisa intermedia frente
+BOX(30, 0.6, 1.3, 'molding', true,  0, 6.5,-5.55);
+BOX(1.3, 0.6, 12, 'molding', true, -14.65, 6.5, 0);
+BOX(1.3, 0.6, 12, 'molding', true,  14.65, 6.5, 0);
+
+// cornisa superior (bajo techo)
+BOX(30, 0.5, 1.2, 'molding', true,  0, 12.0, 5.55);
+BOX(30, 0.5, 1.2, 'molding', true,  0, 12.0,-5.55);
+BOX(1.2, 0.5, 12, 'molding', true, -14.65,12.0, 0);
+BOX(1.2, 0.5, 12, 'molding', true,  14.65,12.0, 0);
+
+// ─── COLUMNAS FACHADA PRINCIPAL ─────────────────────────
+// 6 columnas clásicas en fachada (pilastras adosadas)
+[-9, -5.5, -2, 2, 5.5, 9].forEach(x => addColumn(x, 0, 6.1));
+
+// ─── PÓRTICO / VESTÍBULO CENTRAL ────────────────────────
+// saliente de la entrada principal
+BOX(8, 6.2, 1.8, 'wall',    false, 0, 3.1, 7.4);   // cuerpo portico
+BOX(8, 0.5, 1.9, 'molding', true,  0, 6.45, 7.4);  // cornisa portico
+BOX(8, 0.4, 2.0, 'molding', true,  0, 0.2, 7.4);   // zócalo portico
+// 2 columnas del pórtico
+addColumn(-3.2, 0, 8.0);
+addColumn( 3.2, 0, 8.0);
+// frontón pequeño sobre el pórtico
+const pedSh = new THREE.Shape();
+pedSh.moveTo(-4.2,0); pedSh.lineTo(4.2,0); pedSh.lineTo(0,3.2); pedSh.closePath();
+const pedGeo = new THREE.ExtrudeGeometry(pedSh,{depth:0.7,bevelEnabled:false});
+const pedMesh = new THREE.Mesh(pedGeo, getMat('molding', true));
+pedMesh.position.set(-4.2, 6.6, 7.1);
+pedMesh.castShadow=true; scene.add(pedMesh);
+matMeshes.push({mesh:pedMesh, key:'molding', isSpecular:true});
+
+// ─── PUERTA PRINCIPAL ────────────────────────────────────
+addDoor(0, 2.75, 8.35);
+
+// escalinata de acceso (3 peldaños en abanico)
+for (let i=0; i<3; i++) {
+  BOX(7.5 - i*0.6, 0.34, 1.3, 'stone', false, 0, i*0.34, 8.8 + i*1.3);
+}
+
+// ─── VENTANAS PISO 1 (fachada) ──────────────────────────
+// a ambos lados de la puerta, piso 1
+[-7.5, -4.5, 4.5, 7.5].forEach(x => addWindow(x, 3.0, 6.05, 1.7, 2.4));
+// ventanas laterales piso 1
+[-4, 0, 4].forEach(z => {
+  addWindow(-14.55, 3.0, z, 1.5, 2.2, true);
+  addWindow( 14.55, 3.0, z, 1.5, 2.2, true);
+});
+
+// ─── BALCÓN CORRIDO PISO 2 ───────────────────────────────
+// losa del balcón
+BOX(26, 0.28, 1.4, 'stone', false, 0, 6.84, 6.8);
+// barandal (serie de balaustres)
+for (let i=-12; i<=12; i++) {
+  CYL(0.07, 0.09, 1.1, 8, 'molding', true, i*1.05, 7.55, 7.3);
+}
+BOX(26.5, 0.12, 0.14, 'molding', true,  0, 8.12, 7.3); // pasamanos
+BOX(26.5, 0.12, 0.14, 'molding', true,  0, 7.0,  7.3); // durmiente bajo
+
+// ─── VENTANAS PISO 2 (fachada) ──────────────────────────
+[-7.5, -4.5, -1.5, 1.5, 4.5, 7.5].forEach(x => addWindow(x, 9.6, 6.05, 1.5, 2.0));
+// ventanas laterales piso 2
+[-4, 0, 4].forEach(z => {
+  addWindow(-14.55, 9.6, z, 1.4, 2.0, true);
+  addWindow( 14.55, 9.6, z, 1.4, 2.0, true);
+});
+
+// ─── ESQUINAS DECORATIVAS (cadenas de sillares) ──────────
+[-14, 14].forEach(x => {
+  for(let y=0; y<12; y+=1.1) {
+    BOX(0.55, 0.45, 0.55, y%2.2<1.1?'molding':'wall', y%2.2<1.1, x, y+0.55, 5.85);
+  }
+});
+
+// ─── CHIMENEAS ───────────────────────────────────────────
+[-6, 0, 6].forEach(x => {
+  BOX(0.9, 2.0, 0.9, 'stone', false, x, 13.6, -1.5);
+  BOX(1.2, 0.3, 1.2, 'molding', true, x, 14.7, -1.5);
+  CYL(0.3, 0.3, 0.7, 8, 'iron', true, x, 15.2, -1.5);
+});
+
+// ─── ÁRBOLES DEL JARDÍN ──────────────────────────────────
+[[-20, 3], [-23, 1], [20, 3], [23, 1]].forEach(([tx, tz]) => {
+  CYL(0.18, 0.22, 3.2, 10, 'trunk', false, tx, 1.6, tz);
+  addMesh(new THREE.SphereGeometry(2.0, 9, 9), 'tree', false, tx, 4.2, tz);
+});
+
+// arbusto decorativo flanqueando escalinata
+[-5, 5].forEach(x => {
+  addMesh(new THREE.SphereGeometry(0.9, 8, 8), 'tree', false, x, 1.0, 14.5);
+  CYL(0.08, 0.1, 1.0, 6, 'trunk', false, x, 0.5, 14.5);
+});
+
+// ─── FAROLAS DEL JARDÍN ──────────────────────────────────
+[-11, 11].forEach(x => {
+  CYL(0.06, 0.08, 4.5, 8, 'iron', true, x, 2.25, 16);     // fuste
+  CYL(0.28, 0.04, 0.55, 8, 'molding', true, x, 4.7, 16);  // farol
+  addMesh(new THREE.SphereGeometry(0.2, 8, 8),
+    'window', true, x, 4.9, 16);                           // globo luz
+});
+
+/* ════════════════════════════════════════════════════════════
+   ILUMINACIÓN
+   ════════════════════════════════════════════════════════ */
+const lights = {};
+const helpers = [];
+let helpersVisible = false;
+
+// 1. LUZ AMBIENTAL — relleno global nocturno
+lights.ambient = new THREE.AmbientLight(0xffeedd, 0.55);
+scene.add(lights.ambient);
+
+// 2. LUZ DIRECCIONAL — simula luna (sombras nítidas)
+lights.dir = new THREE.DirectionalLight(0xfff5e0, 1.2);
+lights.dir.position.set(20, 28, 15);
+lights.dir.castShadow = true;
+lights.dir.shadow.mapSize.width  = 2048;
+lights.dir.shadow.mapSize.height = 2048;
+lights.dir.shadow.camera.near   =  0.5;
+lights.dir.shadow.camera.far    =  100;
+lights.dir.shadow.camera.left   = -30;
+lights.dir.shadow.camera.right  =  30;
+lights.dir.shadow.camera.top    =  30;
+lights.dir.shadow.camera.bottom = -20;
+lights.dir.shadow.bias = -0.0006;
+scene.add(lights.dir);
+
+const dHelper = new THREE.DirectionalLightHelper(lights.dir, 3, 0xffff00);
+dHelper.visible = false;
+scene.add(dHelper);
+helpers.push(dHelper);
+
+// 3. LUZ PUNTUAL — farol que orbita la fachada
+lights.point = new THREE.PointLight(0xff7722, 2.5, 30);
+lights.point.position.set(0, 10, 8);
+lights.point.castShadow = true;
+lights.point.shadow.mapSize.width  = 512;
+lights.point.shadow.mapSize.height = 512;
+scene.add(lights.point);
+
+const pHelper = new THREE.PointLightHelper(lights.point, 0.5);
+pHelper.visible = false;
+scene.add(pHelper);
+helpers.push(pHelper);
+
+// 4. LUZ DE RELLENO (fill) — fría, desde abajo-atrás
+lights.fill = new THREE.DirectionalLight(0x3344aa, 0.30);
+lights.fill.position.set(-15, -5, -20);
+scene.add(lights.fill);
+
+const fHelper = new THREE.DirectionalLightHelper(lights.fill, 2, 0x3344ff);
+fHelper.visible = false;
+scene.add(fHelper);
+helpers.push(fHelper);
+
+/* ── ESTADO DE LUCES ── */
+const lightState = { ambient:true, dir:true, point:true };
+
+window.toggleLight = function(type) {
+  lightState[type] = !lightState[type];
+  const ids = { ambient:'btnAmb', dir:'btnDir', point:'btnPnt' };
+  document.getElementById(ids[type]).classList.toggle('active', lightState[type]);
+  if (type==='ambient') lights.ambient.intensity = lightState.ambient ? +document.getElementById('slAmb').value : 0;
+  if (type==='dir')     { lights.dir.intensity   = lightState.dir ? +document.getElementById('slDir').value : 0; dHelper.visible = lightState.dir && helpersVisible; }
+  if (type==='point')   { lights.point.intensity = lightState.point ? +document.getElementById('slPnt').value : 0; pHelper.visible = lightState.point && helpersVisible; }
+};
+
+window.toggleHelpers = function() {
+  helpersVisible = !helpersVisible;
+  document.getElementById('btnHelp').classList.toggle('active', helpersVisible);
+  helpers.forEach(h => { h.visible = helpersVisible; });
+};
+
+/* ── SLIDERS ── */
+document.getElementById('slAmb').addEventListener('input', e => {
+  const v = +e.target.value;
+  document.getElementById('vAmb').textContent = v.toFixed(2);
+  if (lightState.ambient) lights.ambient.intensity = v;
+});
+document.getElementById('slDir').addEventListener('input', e => {
+  const v = +e.target.value;
+  document.getElementById('vDir').textContent = v.toFixed(2);
+  if (lightState.dir) lights.dir.intensity = v;
+});
+document.getElementById('slPnt').addEventListener('input', e => {
+  const v = +e.target.value;
+  document.getElementById('vPnt').textContent = v.toFixed(1);
+  if (lightState.point) lights.point.intensity = v;
+});
+
+/* ════════════════════════════════════════════════════════════
+   CONTROLES DE CÁMARA
+   ════════════════════════════════════════════════════════ */
+let autoRotate = true;
+let isDrag=false, prevX=0, prevY=0, theta=0.55, phi=0.42, radius=28;
+
+window.toggleRotate = function() {
+  autoRotate = !autoRotate;
+  document.getElementById('btnRot').classList.toggle('active', autoRotate);
+};
+
+canvas.addEventListener('mousedown', e => { isDrag=true; prevX=e.clientX; prevY=e.clientY; });
+window.addEventListener('mouseup',  () => isDrag=false);
+window.addEventListener('mousemove', e => {
+  if (!isDrag) return;
+  theta += (e.clientX-prevX)*0.008;
+  phi = Math.max(0.12, Math.min(1.25, phi+(e.clientY-prevY)*0.006));
+  prevX=e.clientX; prevY=e.clientY;
+  if (autoRotate) { autoRotate=false; document.getElementById('btnRot').classList.remove('active'); }
+});
+canvas.addEventListener('wheel', e => {
+  radius = Math.max(10, Math.min(55, radius+e.deltaY*0.05));
+});
+
+let ltX=0, ltY=0;
+canvas.addEventListener('touchstart', e => { ltX=e.touches[0].clientX; ltY=e.touches[0].clientY; });
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  theta += (e.touches[0].clientX-ltX)*0.012;
+  phi = Math.max(0.12, Math.min(1.25, phi+(e.touches[0].clientY-ltY)*0.009));
+  ltX=e.touches[0].clientX; ltY=e.touches[0].clientY;
+  autoRotate=false;
+}, { passive:false });
+
+/* ════════════════════════════════════════════════════════════
+   LOOP DE ANIMACIÓN
+   ════════════════════════════════════════════════════════ */
+let t = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  t += 0.008;
+
+  if (autoRotate) theta += 0.003;
+
+  // la luz puntual gira alrededor de la fachada
+  lights.point.position.x = Math.sin(t*0.7) * 16;
+  lights.point.position.z = Math.cos(t*0.7) * 10 + 3;
+  lights.point.position.y = 8 + Math.sin(t*0.4)*2;
+  if (helpersVisible) { pHelper.update(); dHelper.update(); }
+
+  // posición de cámara esférica
+  camera.position.x = radius * Math.sin(theta) * Math.cos(phi);
+  camera.position.y = radius * Math.sin(phi) + 3;
+  camera.position.z = radius * Math.cos(theta) * Math.cos(phi);
+  camera.lookAt(0, 5, 0);
+
+  renderer.render(scene, camera);
+}
+animate();
+</script>
+</body>
+</html>

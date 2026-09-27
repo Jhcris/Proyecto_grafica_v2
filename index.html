@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es"> <head>     <meta charset="UTF-8">     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casa de Simon I. Patiño</title>
+<!-- FUENTE CLÁSICA --> 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{
+    "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+}
+</script>
+</head>
+<body>
+<!-- BARRA SUPERIOR -->
+<div id="barraSuperior">
+    <div id="titulo">
+        Casa Patiño
+    </div>
+    <div id="menu">
+        <button id="btnHistoria">
+            Historia
+        </button>
+        <button id="btnGaleria">
+            🖼 Galería
+        </button>
+         <div class="ladoIzquierdo">
+        <button id="btnDia" class="btnTiempo">☼ Día</button>
+        <button id="btnAtardecer" class="btnTiempo">☀︎ Atardecer</button>
+        <button id="btnNoche" class="btnTiempo">☾ Noche</button>
+    </div>
+    </div>
+</div>
+
+<!-- PRESENTACIÓN PRINCIPAL -->
+ <div id="presentacion">
+     <h1>Casa de Simón I. Patiño</h1> 
+     <p> Recorrido digital por la vida de Simón I. Patiño,
+         su llegada a Uncía, el auge del estaño y la
+          importancia histórica de la Casa Patiño en el Norte de Potosí. </p> 
+</div>
+
+
+<!-- BOTONES PRINCIPALES -->
+<div id="botonesPrincipales">
+    <button id="btnEntorno">
+        Ver entorno
+    </button>
+    <button id="btnObjetos">
+        Ver Objetos
+    </button>
+</div>
+
+<!-- BOTÓN SALIR DEL MODO VISTA -->
+<button id="btnSalirVista">
+    Salir del Modo Vista
+</button>
+<!-- BOTÓN SALIR -->
+<button id="btnSalir">
+    Salir
+</button>
+<!-- FLECHAS PARA GIRAR EN LA HABITACIÓN -->
+
+<div id="flechasHabitacion">
+
+    <div id="flechaIzquierda">
+        &#10094;
+    </div>
+
+    <div id="flechaDerecha">
+        &#10095;
+    </div>
+
+</div>
+
+
+<!-- VENTANA DE INFORMACIÓN DE OBJETOS -->
+
+<div id="ventanaObjeto">
+
+    <button id="cerrarVentanaObjeto">×</button>
+
+    <h2 id="tituloObjeto">Objeto</h2>
+
+    <p id="textoObjeto">
+        Información del objeto.
+    </p>
+
+</div>
+
+
+<!-- =========================================
+     VIDEO DE YOUTUBE EN LA HABITACIÓN
+========================================= -->
+
+<div id="videoYoutube3D">
+
+    <iframe
+        src="https://www.youtube-nocookie.com/embed/_wpv9IzjOCs?rel=0&modestbranding=1&playsinline=1"
+        title="Museo: La Casa de Simón I. Patiño, Uncía Potosí"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+    </iframe>
+
+    <a
+        href="https://www.youtube.com/watch?v=_wpv9IzjOCs"
+        target="_blank"
+        rel="noopener noreferrer">
+        ▶ Ver video directamente en YouTube
+    </a>
+
+</div>
+<!-- INDICACIÓN DE MOVIMIENTO -->
+<div id="ayudaMovimiento">
+    <h3>Modo Vista</h3>
+    <p>
+        🖱️ Mantén presionado el click izquierdo
+        y mueve el mouse para observar el entorno.
+    </p>
+</div>
+
+<!-- COORDENADAS -->
+<div id="coordenadas">
+    X: 0 | Y: 0 | Z: 0
+</div>
+<!-- MÚSICA DE FONDO -->
+<audio id="musicaFondo" loop>
+    <source src="/Imagenes/musica.mp3" type="audio/mpeg">
+</audio>
+
+<div id="controlMusica">
+    <button id="btnMusica">🔊</button>
+
+    <input
+        type="range"
+        id="volumenMusica"
+        min="0"
+        max="1"
+        step="0.01"
+        value="0.5"
+    >
+</div>
+<!-- JAVASCRIPT -->
+<script type="module" src="./script.js"></script>
+</body>
+</html>

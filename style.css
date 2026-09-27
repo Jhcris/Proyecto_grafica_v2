@@ -1,0 +1,454 @@
+body {
+margin: 0;
+overflow: hidden;
+font-family: Arial, sans-serif;
+}
+
+/* BARRA SUPERIOR */
+#barraSuperior {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 70px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+background: rgba(5, 6, 10, .84);
+color: rgb(225, 234, 145);
+padding: 0 25px;
+box-sizing: border-box;
+z-index: 100;
+}
+
+/* TEXTO CASA PATIÑO */
+#titulo {
+font-family: 'Cinzel', serif;
+font-size: 34px;
+font-weight: 600;
+letter-spacing: 1px;
+}
+
+/* BOTONES */
+#menu {
+display: flex;
+gap: 15px;
+}
+
+#menu button {
+background: transparent;
+color: #fffdf8;;
+border: 1px solid #f4d889;
+padding: 8px 18px;
+font-size: 15px;
+cursor: pointer;
+transition: 0.3s;
+border-radius: 25%;
+}
+
+#menu button:hover {
+background: #f4d889;;
+color: black;
+}
+
+/* PRESENTACIÓN PRINCIPAL */
+#presentacion {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    transform: translateY(-50%);
+    width: 420px;
+    color: rgb(228, 217, 139);
+    /* CUADRO DETRÁS DEL TEXTO */
+    background: rgba(20, 20, 25, 0.75);
+    padding: 35px;
+    border: 2px solid rgb(176, 170, 107);
+    border-radius: 50px;
+    z-index: 100;
+}
+
+#presentacion h1 {
+font-family: 'Cinzel', serif;
+font-size: 72px;
+font-weight: 600;
+margin: 0 0 20px 0;
+line-height: 1.2;
+}
+
+#presentacion p {
+font-size: 18px;
+line-height: 1.6;
+color: #ffffff;
+margin: 0;
+}
+
+/* COORDENADAS */
+#coordenadas {
+position: absolute;
+top: 70px;
+left: 10px;
+color: white;
+background: rgba(0, 0, 0, 0.7);
+padding: 10px;
+font-size: 16px;
+z-index: 100;
+}
+
+/* BOTONES PRINCIPALES */
+#botonesPrincipales {
+    position: absolute;
+    top: 82%;
+    right: 11%;
+    display: flex;
+    gap: 120px;
+    z-index: 100;
+}
+
+#botonesPrincipales button {
+    background: rgba(20, 20, 25, 0.75);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 24px 50px;
+    font-size: 20px;
+    font-family: 'Cinzel', serif;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 10%;
+}
+
+#botonesPrincipales button:hover {
+    background: white;
+    color: black;
+    
+}
+
+/* BOTÓN SALIR DEL MODO VISTA */
+#btnSalirVista {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20, 20, 25, 0.85);
+    color: rgb(221, 202, 154);
+    border: 1px solid rgb(221, 202, 154);
+    border-radius: 10%;
+    padding: 12px 25px;
+    font-size: 20px;
+    font-family: 'Cinzel', serif;
+    cursor: pointer;
+    z-index: 100;
+    display: none;
+}
+
+#btnSalirVista:hover {
+    background: white;
+    color: black;
+}
+
+/* BOTÓN SALIR DEL MODO VISTA */
+#btnSalir {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20, 20, 25, 0.85);
+    color: rgb(221, 202, 154);
+    border: 1px solid rgb(221, 202, 154);
+    border-radius: 10%;
+    padding: 12px 25px;
+    font-size: 20px;
+    font-family: 'Cinzel', serif;
+    cursor: pointer;
+    z-index: 100;
+    display: none;
+}
+
+#btnSalir:hover {
+    background: white;
+    color: black;
+}
+
+   /*AYUDA DE MOVIMIENTO*/
+#ayudaMovimiento {
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    transform: translateY(-50%);
+    width: 280px;
+    background: rgba(20, 20, 25, 0.85);
+    color: white;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    z-index: 100;
+    display: none;
+}
+
+#ayudaMovimiento h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+#ayudaMovimiento p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #dddddd;
+    margin: 0;
+}
+
+/* =================================
+   FLECHAS DE LA HABITACIÓN
+================================= */
+#flechasHabitacion {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    transform: translateY(-50%);
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5 0px;
+    pointer-events: none;
+    z-index: 200;
+}
+
+#flechaIzquierda,
+#flechaDerecha {
+    width: 70px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(241, 236, 236);
+    font-size: 55px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 0px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    opacity: 100;
+    transition: 0.2s;
+}
+
+#flechaIzquierda:hover,
+#flechaDerecha:hover {
+    opacity: 100;
+    background: rgba(0, 0, 0, 0.5);
+}
+/* ==========================================
+   VENTANA DE INFORMACIÓN DEL OBJETO
+   ========================================== */
+
+#ventanaObjeto {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 380px;
+    max-width: 80%;
+    padding: 25px;
+    background: rgba(15, 15, 15, 0.95);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    z-index: 500;
+    display: none;
+    pointer-events: auto;
+}
+
+/* TÍTULO */
+#tituloObjeto {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-family: 'Cinzel', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+}
+
+
+/* TEXTO */
+#textoObjeto {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #eeeeee;
+}
+
+/* BOTÓN X */
+#cerrarVentanaObjeto {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 35px;
+    height: 35px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 28px;
+    pointer-events: auto;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* HOVER DEL BOTÓN */
+#cerrarVentanaObjeto:hover {
+    color: #cccccc;
+    transform: scale(1.1);
+}
+/* =========================================
+   PANTALLA DE VIDEO - HABITACIÓN
+========================================= */
+
+#pantallaVideo {
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+
+    z-index: 20;
+
+    display: none;
+}
+
+/* Contenedor completo del video */
+
+#videoYoutube3D {
+    position: absolute;
+
+    width: 520px;
+    height: 330px;
+
+    background: #111;
+
+    border: 4px solid #d6c16a;
+    border-radius: 4px;
+
+    box-shadow:
+        0 0 20px rgba(0,0,0,0.8),
+        0 0 5px rgba(214,193,106,0.5);
+
+    overflow: hidden;
+
+    pointer-events: auto;
+}
+
+/* Video */
+
+#videoYoutube {
+    display: block;
+
+    width: 100%;
+    height: 290px;
+
+    border: none;
+}
+
+/* Botón para abrir YouTube */
+
+/* =========================================
+   VIDEO 3D DE YOUTUBE
+========================================= */
+
+#videoYoutube3D {
+    width: 520px;
+    height: 330px;
+
+    background: #111;
+
+    border: 4px solid #d6c16a;
+
+    box-sizing: border-box;
+
+    pointer-events: auto;
+}
+
+#videoYoutube3D iframe {
+    display: block;
+
+    width: 100%;
+    height: 290px;
+
+    border: none;
+}
+
+#videoYoutube3D a {
+    display: flex;
+
+    width: 100%;
+    height: 40px;
+
+    box-sizing: border-box;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #181818;
+
+    color: #d6c16a;
+
+    text-decoration: none;
+
+    font-family: "Cinzel", serif;
+
+    font-size: 13px;
+}
+
+#videoYoutube3D a:hover {
+    background: #303030;
+    color: white;
+}
+
+/* =========================================
+   CONTROL DE MÚSICA
+========================================= */
+
+#controlMusica {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px 14px;
+
+    background: rgba(15, 15, 15, 0.85);
+    border: 1px solid #d6c16a;
+
+    border-radius: 6px;
+
+    z-index: 9999;
+}
+
+#btnMusica {
+    width: 38px;
+    height: 38px;
+
+    border: none;
+    background: transparent;
+
+    color: #d6c16a;
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+#btnMusica:hover {
+    color: white;
+}
+
+#volumenMusica {
+    width: 100px;
+    cursor: pointer;
+}

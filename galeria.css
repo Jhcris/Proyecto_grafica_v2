@@ -1,0 +1,390 @@
+/* =========================================
+   VARIABLES
+========================================= */
+:root {
+    --bg: #080a10;
+    --panel: #121722;
+    --panel2: #1b2230;
+    --gold: #d7b35a;
+    --gold2: #f4d889;
+    --text: #f6dfdf;
+    --muted: #c6bda8;
+    --line: rgba(215, 179, 90, .28);
+    --soft: rgba(255, 255, 255, .075);
+}
+/* =========================================
+   CONFIGURACIÓN GENERAL
+========================================= */
+* {
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth;
+}
+body {
+    margin: 0;
+    font-family: Segoe UI, Arial, sans-serif;
+    background:
+        radial-gradient(
+            circle at top left,
+            #26324b 0,
+            #0d111d 34%,
+            #07080d 100%
+        );
+    color: var(--text);
+    line-height: 1.7;
+}
+/* =========================================
+   BARRA DE NAVEGACIÓN
+========================================= */
+.topnav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(5, 6, 10, .84);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+}
+
+.nav-inner {
+    max-width: 1160px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 12px 18px;
+}
+/* =========================================
+   NOMBRE DE LA PÁGINA
+========================================= */
+.brand {
+    font-weight: 900;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--gold2);
+    font-size: .92rem;
+
+}
+/* =========================================
+   ENLACES DEL MENÚ
+========================================= */
+.links {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.links a {
+    color: var(--text);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    background:rgba(215, 179, 90, .10);
+    padding: 9px 14px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: .92rem;
+    transition: .2s;
+}
+
+.links a:hover,
+.links a.active {
+    background:
+        linear-gradient(
+            135deg,
+            var(--gold),
+            var(--gold2)
+        );
+    color: #111;
+    transform: translateY(-1px);
+}
+/* =========================================
+   ENCABEZADO / HERO
+========================================= */
+.hero {
+    max-width: 1160px;
+    margin: auto;
+    text-align: center;
+    padding: 70px 18px 38px;
+}
+
+.eyebrow {
+    color: var(--gold2);
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    font-size: .8rem;
+    font-weight: 800;
+}
+
+.hero h1 {
+    font-family: Georgia, serif;
+    font-size: clamp(2rem, 6vw, 4.8rem);
+    line-height: 1.05;
+    margin: 12px 0;
+    color: #fff;
+    text-shadow: 0 10px 32px rgba(0, 0, 0, .45);
+}
+
+.hero p {
+    max-width: 880px;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 1.08rem;
+}
+/* =========================================
+   BOTONES DEL ENCABEZADO
+========================================= */
+.actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 24px;
+}
+
+.btn {
+    color: var(--text);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    background: rgba(215, 179, 90, .10);
+    padding: 9px 14px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: .92rem;
+    transition: .2s;
+}
+
+
+.btn:hover {
+    background:
+        linear-gradient(
+            135deg,
+            var(--gold),
+            var(--gold2)
+        );
+    color: #111;
+    transform: translateY(-1px);
+}
+
+/* =========================================
+   CONTENEDOR PRINCIPAL
+========================================= */
+.wrap {
+    max-width: 1160px;
+    margin: auto;
+    padding: 22px 18px 64px;
+}
+/* =========================================
+   SECCIONES
+========================================= */
+.section {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, .075),
+            rgba(255, 255, 255, .035)
+        );
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 28px;
+    margin: 22px 0;
+    box-shadow:
+        0 22px 55px rgba(0, 0, 0, .28);
+}
+
+
+.section h2 {
+    font-family: Georgia, serif;
+    color: var(--gold2);
+    font-size: clamp(1.45rem, 3vw, 2.15rem);
+    margin: 0 0 12px;
+}
+
+.section h3 {
+    color: #fff;
+    margin: 18px 0 8px;
+}
+
+.gallery-title {
+
+    text-align: center;
+
+}
+/* =========================================
+   GALERÍA
+========================================= */
+.grid {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(240px, 1fr)
+        );
+    gap: 18px;
+    margin-top: 22px;
+
+}
+/* =========================================
+   TARJETAS
+========================================= */
+
+.card {
+
+    background: rgba(0, 0, 0, .24);
+    border: 1px solid rgba(255, 255, 255, .09);
+    border-radius: 19px;
+    overflow: hidden;
+    box-shadow:
+        0 16px 35px rgba(0, 0, 0, .25);
+}
+/* =========================================
+   IMÁGENES
+========================================= */
+.card img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    display: block;
+}
+
+.photo-card img {
+    height: 310px;
+    filter:
+        sepia(10%)
+        contrast(1.02);
+}
+
+/* =========================================
+   CUERPO DE LAS TARJETAS
+========================================= */
+.card .body {
+    padding: 16px;
+}
+
+.card h3 {
+    margin: 0 0 6px;
+    color: #fff;
+    font-size: 1.05rem;
+}
+
+.card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: .94rem;
+}
+
+.caption-small {
+    font-size: .86rem;
+    color: var(--muted);
+    margin-top: 8px;
+}
+
+/* =========================================
+   ESTADÍSTICAS
+======================================== */
+.statgrid {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(160px, 1fr)
+        );
+    gap: 12px;
+    margin-top: 20px;
+}
+
+
+.stat {
+    padding: 16px;
+    border-radius: 17px;
+    background: rgba(215, 179, 90, .11);
+    border: 1px solid var(--line);
+}
+
+.stat b {
+    display: block;
+    color: var(--gold2);
+    font-size: 1.15rem;
+}
+/* =========================================
+   LÍNEA DE TIEMPO
+========================================= */
+.timeline {
+    display: grid;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.timeitem {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 16px;
+    align-items: start;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    background: rgba(0, 0, 0, .18);
+    border-radius: 18px;
+}
+
+.year {
+    color: #111;
+    background:
+        linear-gradient(135deg,var(--gold),var(--gold2));
+    font-weight: 900;
+    text-align: center;
+    border-radius: 999px;
+    padding: 6px 10px;
+}
+/* =========================================
+   LISTAS
+========================================= */
+.list {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(230px, 1fr)
+        );
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.list div {
+    border: 1px solid rgba(255, 255, 255, .08);
+    background: rgba(255, 255, 255, .04);
+    border-radius: 16px;
+    padding: 14px;
+}
+/* =========================================
+   PIE DE PÁGINA
+========================================= */
+.footer {
+    text-align: center;
+    color: rgba(246, 240, 223, .62);
+    font-size: .88rem;
+    padding: 28px;
+    border-top:
+        1px solid rgba(255, 255, 255, .08);
+}
+/* =========================================
+   RESPONSIVE
+========================================= */
+@media (max-width: 690px) {
+    .nav-inner {
+        justify-content: center;
+    }
+    .hero {
+        padding-top: 42px;
+    }
+    .section {
+        padding: 20px;
+    }
+    .timeitem {
+        grid-template-columns: 1fr;
+    }
+    .card img {
+        height: 220px;
+    }
+
+}
